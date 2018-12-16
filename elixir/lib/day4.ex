@@ -39,7 +39,7 @@ defmodule AdventOfCode2018.Day4 do
     %{month: mo, day: d, hour: h, minute: m, timestamp: timestamp}
   end
 
-  # Creates a single numeric time components
+  # Creates a single numeric time component to make sorting easier
   defp create_timestamp(time_components) do
     time_components
     |> Enum.map(fn x -> String.pad_leading(x, 2, "0") end)
@@ -49,7 +49,7 @@ defmodule AdventOfCode2018.Day4 do
 
   # Parses log entry to either `{:begins, guard_id}`, `{:wakes}`, `{:sleeps}`
   defp parse_log("Guard #" <> rest) do
-    [guard_number | _rest ] = String.split(rest, " ")
+    [guard_number | _rest] = String.split(rest, " ")
     {:begins, String.to_integer(guard_number)}
   end
   defp parse_log("wakes up"), do: {:wakes}
@@ -63,9 +63,7 @@ defmodule AdventOfCode2018.Day4 do
   end
 
   # Adds the guard ID to all :sleep/:wake entries so that the guard context
-  # will exist when a single entry is inspected. Also adds an additional entry
-  # when a guard ends their shift (which will be the same minute that the next
-  # guard begins their shift since subtracting a minute is hard)
+  # will exist on all entries and not just Beings Shift ones
   defp add_guard_context(entries) do
     entries |> Enum.reduce({:nil, []}, &guard_context_reducer/2) |> elem(1)
   end
